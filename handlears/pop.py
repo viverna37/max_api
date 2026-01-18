@@ -1,4 +1,4 @@
-from maxapi.types import MessageCallback, LinkButton
+from maxapi.types import MessageCallback, LinkButton, Message
 from maxapi.utils.inline_keyboard import InlineKeyboardBuilder
 
 from config import dp
@@ -7,7 +7,7 @@ from database.repository.main_repository import Repository
 
 
 @dp.message_created()
-async def pop(event: MessageCallback):
+async def pop(event: Message):
     async with db.session() as session:
         repo = Repository(session)
         text = await repo.default_repository.get_value("message")
@@ -17,8 +17,7 @@ async def pop(event: MessageCallback):
     builder.row(
         LinkButton(text="Перейти", url=link)
     )
-    await event.bot.send_message(
-        chat_id=event.chat_id,
+    await event.answer(
         text=text,
         attachments=[builder.as_markup()]
     )
