@@ -44,8 +44,12 @@ async def on_bot_started(event: BotStarted):
             text = await repo.campaign_repository.get_campaign(campaign_id=campaign_id)
 
         builder = InlineKeyboardBuilder()
-        for i in enumerate(links.links):
-            builder.row(LinkButton(text=f"{i[0]+1}. Канал", url=i[1]))
+        if len(links.links) == 1:
+            for i in links.links:
+                builder.row(LinkButton(text=f"Канал", url=i))
+        else:
+            for i in enumerate(links.links):
+                builder.row(LinkButton(text=f"{i[0]+1}. Канал", url=i[1]))
 
 
         await repo.campaign_repository.increment(campaign_id=campaign_id)
